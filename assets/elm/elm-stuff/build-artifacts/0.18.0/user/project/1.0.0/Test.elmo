@@ -1,6 +1,0 @@
-var _user$project$Test$check = _elm_lang$core$Native_Platform.outgoingPort(
-	'check',
-	function (v) {
-		return v;
-	});
-var _user$project$Test$suggestions = _elm_lang$core$Native_Platform.incomingPort('suggestions', _elm_lang$core$Json_Decode$string);
