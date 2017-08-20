@@ -1,10 +1,4 @@
-module Pages.Login exposing
-    ( Model
-    , initialModel
-    , subscriptions
-    , update
-    , view
-    )
+module Pages.Login exposing (initialModel, subscriptions, update, view)
 
 {-| All the jazz for login page
 -}
@@ -21,60 +15,52 @@ import Ports exposing
 import Msg as App exposing (Msg(..))
 import Pages.Login.Msg as Login exposing (..)
 
+import Model as App exposing (Model(..))
+import Pages.Login.Model as Login exposing (..)
+
 -- MODEL
-
-
-type alias Model =
-  { appLoaded : Bool
-  , fbInitialized : Bool
-  }
-
 
 {-| This is the starting model for this state
 -}
-initialModel : Model
+initialModel : App.Model
 initialModel =
-  { appLoaded = False
-  , fbInitialized = False
+  ModelLogin {
+    appLoaded = False,
+    fbInitialized = False
   }
-
 
 
 -- UPDATE
 
-update : Login.Msg -> Model -> ( Model -> a) -> ( a, Cmd msg )
-update msg model modelProd =
-  let
-    result =
-      case msg of
-        AppLoaded -> onAppLoaded model
-        FbInitialized -> onFacebookInitialized model
-        LoginStatusReceived loginStatus -> onFacebookLoginStatus model loginStatus
-  in
-    Tuple.mapFirst modelProd result
+update : Login.Msg -> Login.Model -> ( App.Model, Cmd msg )
+update msg model =
+  case msg of
+    AppLoaded -> onAppLoaded model
+    FbInitialized -> onFacebookInitialized model
+    LoginStatusReceived loginStatus -> onFacebookLoginStatus model loginStatus
 
 
-onAppLoaded : Model -> ( Model, Cmd msg )
+onAppLoaded : Login.Model -> ( App.Model, Cmd msg )
 onAppLoaded model =
-  ( { model | appLoaded = True }, initFb Config.fb )
+  ( ModelLogin { model | appLoaded = True }, initFb Config.fb )
 
-onFacebookInitialized : Model -> ( Model, Cmd msg )
+onFacebookInitialized : Login.Model -> ( App.Model, Cmd msg )
 onFacebookInitialized model =
-  ( { model | fbInitialized = True }, checkLoginStatus () )
+  ( ModelLogin { model | fbInitialized = True }, checkLoginStatus () )
 
-onFacebookLoginStatus : Model -> LoginStatus -> ( Model, Cmd msg )
+onFacebookLoginStatus : Login.Model -> LoginStatus -> ( App.Model, Cmd msg )
 onFacebookLoginStatus model status =
-  Debug.log (toString status) ( model, Cmd.none )
+  Debug.log (toString status) ( ModelLogin model, Cmd.none )
 
 
 -- SUBSCRIPTIONS
 
-subscriptions : Model -> Sub App.Msg
+subscriptions : Login.Model -> Sub App.Msg
 subscriptions model =
   Sub.batch
     [ appLoaded (\_ -> MsgLogin AppLoaded)
     , fbInitialized (\_ -> MsgLogin FbInitialized)
-    , fbLoginStatus (\s -> MsgLogin (LoginStatusReceived(decodeFbLoginStatus s)))
+    , fbLoginStatus (\s -> MsgLogin (LoginStatusReceived(decodeFbLoginStatus s))) -- TODO: use roofs here
     ]
 
 decodeFbLoginStatus : String -> LoginStatus
@@ -86,9 +72,9 @@ decodeFbLoginStatus status =
 
 -- VIEW
 
-view : Model -> Html msg
+view : Login.Model -> Html msg
 view model =
   div [] [
-    div [] [text "LOGIN APP"],
+    div [] [text "LOGIN PAGE"],
     div [] [text (toString model.appLoaded)]
   ]

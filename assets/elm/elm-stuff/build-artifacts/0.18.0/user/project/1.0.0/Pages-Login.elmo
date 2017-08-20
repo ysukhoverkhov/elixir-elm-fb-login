@@ -9,7 +9,7 @@ var _user$project$Pages_Login$view = function (model) {
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text('LOGIN APP'),
+					_0: _elm_lang$html$Html$text('LOGIN PAGE'),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
@@ -67,14 +67,19 @@ var _user$project$Pages_Login$onFacebookLoginStatus = F2(
 		return A2(
 			_elm_lang$core$Debug$log,
 			_elm_lang$core$Basics$toString(status),
-			{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none});
+			{
+				ctor: '_Tuple2',
+				_0: _user$project$Model$ModelLogin(model),
+				_1: _elm_lang$core$Platform_Cmd$none
+			});
 	});
 var _user$project$Pages_Login$onFacebookInitialized = function (model) {
 	return {
 		ctor: '_Tuple2',
-		_0: _elm_lang$core$Native_Utils.update(
-			model,
-			{fbInitialized: true}),
+		_0: _user$project$Model$ModelLogin(
+			_elm_lang$core$Native_Utils.update(
+				model,
+				{fbInitialized: true})),
 		_1: _user$project$Ports$checkLoginStatus(
 			{ctor: '_Tuple0'})
 	};
@@ -82,29 +87,24 @@ var _user$project$Pages_Login$onFacebookInitialized = function (model) {
 var _user$project$Pages_Login$onAppLoaded = function (model) {
 	return {
 		ctor: '_Tuple2',
-		_0: _elm_lang$core$Native_Utils.update(
-			model,
-			{appLoaded: true}),
+		_0: _user$project$Model$ModelLogin(
+			_elm_lang$core$Native_Utils.update(
+				model,
+				{appLoaded: true})),
 		_1: _user$project$Ports$initFb(_user$project$Config$fb)
 	};
 };
-var _user$project$Pages_Login$update = F3(
-	function (msg, model, modelProd) {
-		var result = function () {
-			var _p3 = msg;
-			switch (_p3.ctor) {
-				case 'AppLoaded':
-					return _user$project$Pages_Login$onAppLoaded(model);
-				case 'FbInitialized':
-					return _user$project$Pages_Login$onFacebookInitialized(model);
-				default:
-					return A2(_user$project$Pages_Login$onFacebookLoginStatus, model, _p3._0);
-			}
-		}();
-		return A2(_elm_lang$core$Tuple$mapFirst, modelProd, result);
+var _user$project$Pages_Login$update = F2(
+	function (msg, model) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
+			case 'AppLoaded':
+				return _user$project$Pages_Login$onAppLoaded(model);
+			case 'FbInitialized':
+				return _user$project$Pages_Login$onFacebookInitialized(model);
+			default:
+				return A2(_user$project$Pages_Login$onFacebookLoginStatus, model, _p3._0);
+		}
 	});
-var _user$project$Pages_Login$initialModel = {appLoaded: false, fbInitialized: false};
-var _user$project$Pages_Login$Model = F2(
-	function (a, b) {
-		return {appLoaded: a, fbInitialized: b};
-	});
+var _user$project$Pages_Login$initialModel = _user$project$Model$ModelLogin(
+	{appLoaded: false, fbInitialized: false});

@@ -5,8 +5,9 @@ module Main exposing (main)
 -}
 
 import Html exposing (Html, button, div, input, text)
-import Pages.Login as Login exposing (Model, initialModel, subscriptions, update, view)
+import Pages.Login as Login exposing (initialModel, subscriptions, update, view)
 import Msg exposing (Msg(..))
+import Model exposing (Model(..))
 
 {-| The main
 -}
@@ -20,30 +21,11 @@ main =
     }
 
 
-
 -- MODEL
--- TODO: move me to App Page.
-
-
-type alias AppModel =
-  { userId : String
-  }
-
-
-type Model
-  = ModelLogin Login.Model
-  | ModelApp AppModel
-
-
-initialModel : Model
-initialModel =
-  ModelLogin Login.initialModel
-
 
 init : ( Model, Cmd msg )
 init =
-  ( initialModel, Cmd.none )
-
+  ( Login.initialModel, Cmd.none )
 
 
 -- UPDATE
@@ -52,16 +34,14 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   case ( msg, model ) of
     ( MsgLogin lmsg, ModelLogin lmodel ) ->
-      Login.update lmsg lmodel ModelLogin
+      Login.update lmsg lmodel
 
     _ ->
       -- TODO: Fatal error model here.
       ( model, Cmd.none )
 
 
-
 -- SUBSCRIPTIONS
-
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -73,9 +53,7 @@ subscriptions model =
       Sub.none
 
 
-
 -- VIEW
-
 
 view : Model -> Html Msg
 view model =
