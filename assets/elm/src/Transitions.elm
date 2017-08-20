@@ -9,7 +9,7 @@ import Pages.Office.Model as Office exposing (Model)
 
 loginToOffice : Login.Model -> App.Model
 loginToOffice login =
-  App.ModelOffice { state = Office.Working, userId = "VASIA" }
+  App.ModelOffice { state = Office.Working, userId = "TODO" }
 
 officeToLogin : Office.Model -> App.Model
 officeToLogin login =

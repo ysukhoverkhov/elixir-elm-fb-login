@@ -5,7 +5,6 @@ port module Ports exposing (..)
 @docs initFb
 @docs appLoaded
 @docs fbInitialized
-
 -}
 
 
