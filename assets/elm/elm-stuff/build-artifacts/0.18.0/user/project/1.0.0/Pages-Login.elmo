@@ -40,22 +40,20 @@ var _user$project$Pages_Login$subscriptions = function (model) {
 		{
 			ctor: '::',
 			_0: _user$project$Ports$appLoaded(
-				function (_p1) {
-					return _user$project$Msg$MsgLogin(_user$project$Pages_Login_Msg$AppLoaded);
-				}),
+				_elm_lang$core$Basics$always(
+					_user$project$Msg$MsgLogin(_user$project$Pages_Login_Msg$AppLoaded))),
 			_1: {
 				ctor: '::',
 				_0: _user$project$Ports$fbInitialized(
-					function (_p2) {
-						return _user$project$Msg$MsgLogin(_user$project$Pages_Login_Msg$FbInitialized);
-					}),
+					_elm_lang$core$Basics$always(
+						_user$project$Msg$MsgLogin(_user$project$Pages_Login_Msg$FbInitialized))),
 				_1: {
 					ctor: '::',
 					_0: _user$project$Ports$fbLoginStatus(
-						function (s) {
+						function (_p1) {
 							return _user$project$Msg$MsgLogin(
 								_user$project$Pages_Login_Msg$LoginStatusReceived(
-									_user$project$Pages_Login$decodeFbLoginStatus(s)));
+									_user$project$Pages_Login$decodeFbLoginStatus(_p1)));
 						}),
 					_1: {ctor: '[]'}
 				}
@@ -64,14 +62,26 @@ var _user$project$Pages_Login$subscriptions = function (model) {
 };
 var _user$project$Pages_Login$onFacebookLoginStatus = F2(
 	function (model, status) {
-		return A2(
-			_elm_lang$core$Debug$log,
-			_elm_lang$core$Basics$toString(status),
-			{
-				ctor: '_Tuple2',
-				_0: _user$project$Model$ModelLogin(model),
-				_1: _elm_lang$core$Platform_Cmd$none
-			});
+		var _p2 = status;
+		if (_p2.ctor === 'Connected') {
+			return A2(
+				_elm_lang$core$Debug$log,
+				'C!',
+				{
+					ctor: '_Tuple2',
+					_0: _user$project$Transitions$loginToOffice(model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				});
+		} else {
+			return A2(
+				_elm_lang$core$Debug$log,
+				_elm_lang$core$Basics$toString(status),
+				{
+					ctor: '_Tuple2',
+					_0: _user$project$Model$ModelLogin(model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				});
+		}
 	});
 var _user$project$Pages_Login$onFacebookInitialized = function (model) {
 	return {

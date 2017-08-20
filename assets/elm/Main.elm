@@ -5,9 +5,12 @@ module Main exposing (main)
 -}
 
 import Html exposing (Html, button, div, input, text)
-import Pages.Login as Login exposing (initialModel, subscriptions, update, view)
+
 import Msg exposing (Msg(..))
 import Model exposing (Model(..))
+
+import Pages.Login as Login exposing (initialModel, subscriptions, update, view)
+import Pages.Office as Office exposing (subscriptions, update, view)
 
 {-| The main
 -}
@@ -49,8 +52,8 @@ subscriptions model =
     ModelLogin m ->
       Login.subscriptions m
 
-    ModelApp _ ->
-      Sub.none
+    ModelOffice m ->
+      Office.subscriptions m
 
 
 -- VIEW
@@ -61,5 +64,5 @@ view model =
     ModelLogin m ->
       Login.view m
 
-    ModelApp _ ->
-      text "APP"
+    ModelOffice m ->
+      Office.view m

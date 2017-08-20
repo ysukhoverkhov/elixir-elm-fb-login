@@ -12,11 +12,14 @@ import Ports exposing
   , fbLoginStatus
   , initFb)
 
+import Transitions exposing (loginToOffice)
+
 import Msg as App exposing (Msg(..))
 import Pages.Login.Msg as Login exposing (..)
 
 import Model as App exposing (Model(..))
 import Pages.Login.Model as Login exposing (..)
+
 
 -- MODEL
 
@@ -50,7 +53,9 @@ onFacebookInitialized model =
 
 onFacebookLoginStatus : Login.Model -> LoginStatus -> ( App.Model, Cmd msg )
 onFacebookLoginStatus model status =
-  Debug.log (toString status) ( ModelLogin model, Cmd.none )
+  case status of
+    Connected -> Debug.log ("C!") ( loginToOffice model, Cmd.none )
+    NotConnected -> Debug.log (toString status) ( ModelLogin model, Cmd.none )
 
 
 -- SUBSCRIPTIONS
@@ -58,9 +63,9 @@ onFacebookLoginStatus model status =
 subscriptions : Login.Model -> Sub App.Msg
 subscriptions model =
   Sub.batch
-    [ appLoaded (\_ -> MsgLogin AppLoaded)
-    , fbInitialized (\_ -> MsgLogin FbInitialized)
-    , fbLoginStatus (\s -> MsgLogin (LoginStatusReceived(decodeFbLoginStatus s))) -- TODO: use roofs here
+    [ appLoaded (MsgLogin AppLoaded |> always)
+    , fbInitialized (MsgLogin FbInitialized |> always)
+    , fbLoginStatus (decodeFbLoginStatus >> LoginStatusReceived >> MsgLogin)
     ]
 
 decodeFbLoginStatus : String -> LoginStatus
