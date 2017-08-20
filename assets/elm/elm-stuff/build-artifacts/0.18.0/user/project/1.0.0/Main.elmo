@@ -17,11 +17,27 @@ var _user$project$Main$subscriptions = function (model) {
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p2 = {ctor: '_Tuple2', _0: msg, _1: model};
-		if ((_p2.ctor === '_Tuple2') && (_p2._1.ctor === 'ModelLogin')) {
-			return A2(_user$project$Pages_Login$update, _p2._0._0, _p2._1._0);
-		} else {
-			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-		}
+		_v2_2:
+		do {
+			if (_p2.ctor === '_Tuple2') {
+				if (_p2._0.ctor === 'MsgLogin') {
+					if (_p2._1.ctor === 'ModelLogin') {
+						return A2(_user$project$Pages_Login$update, _p2._0._0, _p2._1._0);
+					} else {
+						break _v2_2;
+					}
+				} else {
+					if (_p2._1.ctor === 'ModelOffice') {
+						return A2(_user$project$Pages_Office$update, _p2._0._0, _p2._1._0);
+					} else {
+						break _v2_2;
+					}
+				}
+			} else {
+				break _v2_2;
+			}
+		} while(false);
+		return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 	});
 var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Pages_Login$initialModel, _1: _elm_lang$core$Platform_Cmd$none};
 var _user$project$Main$main = _elm_lang$html$Html$program(

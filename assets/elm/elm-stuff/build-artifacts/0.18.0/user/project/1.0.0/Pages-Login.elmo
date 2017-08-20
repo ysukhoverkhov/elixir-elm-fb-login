@@ -64,14 +64,11 @@ var _user$project$Pages_Login$onFacebookLoginStatus = F2(
 	function (model, status) {
 		var _p2 = status;
 		if (_p2.ctor === 'Connected') {
-			return A2(
-				_elm_lang$core$Debug$log,
-				'C!',
-				{
-					ctor: '_Tuple2',
-					_0: _user$project$Transitions$loginToOffice(model),
-					_1: _elm_lang$core$Platform_Cmd$none
-				});
+			return {
+				ctor: '_Tuple2',
+				_0: _user$project$Transitions$loginToOffice(model),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
 		} else {
 			return A2(
 				_elm_lang$core$Debug$log,

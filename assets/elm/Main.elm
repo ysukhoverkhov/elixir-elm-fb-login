@@ -39,6 +39,9 @@ update msg model =
     ( MsgLogin lmsg, ModelLogin lmodel ) ->
       Login.update lmsg lmodel
 
+    ( MsgOffice lmsg, ModelOffice lmodel ) ->
+      Office.update lmsg lmodel
+
     _ ->
       -- TODO: Fatal error model here.
       ( model, Cmd.none )

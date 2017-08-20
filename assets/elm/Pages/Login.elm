@@ -54,7 +54,7 @@ onFacebookInitialized model =
 onFacebookLoginStatus : Login.Model -> LoginStatus -> ( App.Model, Cmd msg )
 onFacebookLoginStatus model status =
   case status of
-    Connected -> Debug.log ("C!") ( loginToOffice model, Cmd.none )
+    Connected -> ( loginToOffice model, Cmd.none )
     NotConnected -> Debug.log (toString status) ( ModelLogin model, Cmd.none )
 
 
