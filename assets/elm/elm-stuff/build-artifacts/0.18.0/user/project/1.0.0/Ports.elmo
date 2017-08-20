@@ -1,0 +1,19 @@
+var _user$project$Ports$appLoaded = _elm_lang$core$Native_Platform.incomingPort(
+	'appLoaded',
+	_elm_lang$core$Json_Decode$null(
+		{ctor: '_Tuple0'}));
+var _user$project$Ports$fbInitialized = _elm_lang$core$Native_Platform.incomingPort(
+	'fbInitialized',
+	_elm_lang$core$Json_Decode$null(
+		{ctor: '_Tuple0'}));
+var _user$project$Ports$fbLoginStatus = _elm_lang$core$Native_Platform.incomingPort('fbLoginStatus', _elm_lang$core$Json_Decode$string);
+var _user$project$Ports$initFb = _elm_lang$core$Native_Platform.outgoingPort(
+	'initFb',
+	function (v) {
+		return {appId: v.appId, sdkVersion: v.sdkVersion};
+	});
+var _user$project$Ports$checkLoginStatus = _elm_lang$core$Native_Platform.outgoingPort(
+	'checkLoginStatus',
+	function (v) {
+		return null;
+	});

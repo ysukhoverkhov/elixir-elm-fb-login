@@ -1,0 +1,113 @@
+var _user$project$Pages_Login$view = F2(
+	function (model, _p0) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('LOGIN APP'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_elm_lang$core$Basics$toString(model.appLoaded)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$Pages_Login$onFacebookLoginStatus = F2(
+	function (model, status) {
+		return A2(
+			_elm_lang$core$Debug$log,
+			_elm_lang$core$Basics$toString(status),
+			{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none});
+	});
+var _user$project$Pages_Login$onFacebookInitialized = function (model) {
+	return {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Native_Utils.update(
+			model,
+			{fbInitialized: true}),
+		_1: _user$project$Ports$checkLoginStatus(
+			{ctor: '_Tuple0'})
+	};
+};
+var _user$project$Pages_Login$onAppLoaded = function (model) {
+	return {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Native_Utils.update(
+			model,
+			{appLoaded: true}),
+		_1: _user$project$Ports$initFb(_user$project$Config$fb)
+	};
+};
+var _user$project$Pages_Login$update = F3(
+	function (msg, model, _p1) {
+		var _p2 = _p1;
+		var result = function () {
+			var _p3 = msg;
+			switch (_p3.ctor) {
+				case 'AppLoaded':
+					return _user$project$Pages_Login$onAppLoaded(model);
+				case 'FbInitialized':
+					return _user$project$Pages_Login$onFacebookInitialized(model);
+				default:
+					return A2(_user$project$Pages_Login$onFacebookLoginStatus, model, _p3._0);
+			}
+		}();
+		return A2(_elm_lang$core$Tuple$mapFirst, _p2._0, result);
+	});
+var _user$project$Pages_Login$decodeFbLoginStatus = function (status) {
+	var _p4 = status;
+	if (_p4 === 'connected') {
+		return _user$project$Pages_Login_Msg$Connected;
+	} else {
+		return _user$project$Pages_Login_Msg$NotConnected;
+	}
+};
+var _user$project$Pages_Login$subscriptions = F2(
+	function (model, prod) {
+		return _elm_lang$core$Platform_Sub$batch(
+			{
+				ctor: '::',
+				_0: _user$project$Ports$appLoaded(
+					function (_p5) {
+						return prod(_user$project$Pages_Login_Msg$AppLoaded);
+					}),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Ports$fbInitialized(
+						function (_p6) {
+							return prod(_user$project$Pages_Login_Msg$FbInitialized);
+						}),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Ports$fbLoginStatus(
+							function (s) {
+								return prod(
+									_user$project$Pages_Login_Msg$LoginStatusReceived(
+										_user$project$Pages_Login$decodeFbLoginStatus(s)));
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _user$project$Pages_Login$initialModel = {appLoaded: false, fbInitialized: false};
+var _user$project$Pages_Login$Model = F2(
+	function (a, b) {
+		return {appLoaded: a, fbInitialized: b};
+	});

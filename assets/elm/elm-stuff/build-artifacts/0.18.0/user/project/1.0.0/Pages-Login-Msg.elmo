@@ -1,0 +1,7 @@
+var _user$project$Pages_Login_Msg$NotConnected = {ctor: 'NotConnected'};
+var _user$project$Pages_Login_Msg$Connected = {ctor: 'Connected'};
+var _user$project$Pages_Login_Msg$LoginStatusReceived = function (a) {
+	return {ctor: 'LoginStatusReceived', _0: a};
+};
+var _user$project$Pages_Login_Msg$FbInitialized = {ctor: 'FbInitialized'};
+var _user$project$Pages_Login_Msg$AppLoaded = {ctor: 'AppLoaded'};

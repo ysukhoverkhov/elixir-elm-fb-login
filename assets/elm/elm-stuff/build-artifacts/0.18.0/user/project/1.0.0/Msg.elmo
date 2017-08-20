@@ -1,0 +1,3 @@
+var _user$project$Msg$MsgLogin = function (a) {
+	return {ctor: 'MsgLogin', _0: a};
+};
