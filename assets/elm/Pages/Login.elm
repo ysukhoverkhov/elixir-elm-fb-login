@@ -28,8 +28,7 @@ import Pages.Login.Model as Login exposing (..)
 initialModel : App.Model
 initialModel =
   ModelLogin {
-    appLoaded = False,
-    fbInitialized = False
+    state = LoadingApp
   }
 
 
@@ -45,17 +44,19 @@ update msg model =
 
 onAppLoaded : Login.Model -> ( App.Model, Cmd msg )
 onAppLoaded model =
-  ( ModelLogin { model | appLoaded = True }, initFb Config.fb )
+  ( ModelLogin { model | state = InitializingFb }, initFb Config.fb )
 
 onFacebookInitialized : Login.Model -> ( App.Model, Cmd msg )
 onFacebookInitialized model =
-  ( ModelLogin { model | fbInitialized = True }, checkLoginStatus () )
+  ( ModelLogin { model | state = CheckingLoginStatus }, checkLoginStatus () )
 
 onFacebookLoginStatus : Login.Model -> LoginStatus -> ( App.Model, Cmd msg )
 onFacebookLoginStatus model status =
   case status of
-    Connected -> ( loginToOffice model, Cmd.none )
-    NotConnected -> Debug.log (toString status) ( ModelLogin model, Cmd.none )
+    Connected ->
+      ( loginToOffice model, Cmd.none )
+    NotConnected ->
+      ( ModelLogin { model | state = WaitingForLogin }, Cmd.none )
 
 
 -- SUBSCRIPTIONS
@@ -81,5 +82,5 @@ view : Login.Model -> Html msg
 view model =
   div [] [
     div [] [text "LOGIN PAGE"],
-    div [] [text (toString model.appLoaded)]
+    div [] [text <| "App status " ++ (toString model.state)]
   ]

@@ -26,6 +26,10 @@ port fbLoginStatus : (String -> msg) -> Sub msg
 -}
 port initFb : { appId : String, sdkVersion : String } -> Cmd msg
 
-{-| Asks fb about status of login
+{-| Asks FB about status of login
 -}
 port checkLoginStatus : () -> Cmd msg
+
+{-| Asks FB to logout current user
+-}
+port fbLogout : () -> Cmd msg

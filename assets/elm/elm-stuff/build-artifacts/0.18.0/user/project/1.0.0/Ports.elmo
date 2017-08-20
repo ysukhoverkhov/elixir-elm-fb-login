@@ -17,3 +17,8 @@ var _user$project$Ports$checkLoginStatus = _elm_lang$core$Native_Platform.outgoi
 	function (v) {
 		return null;
 	});
+var _user$project$Ports$fbLogout = _elm_lang$core$Native_Platform.outgoingPort(
+	'fbLogout',
+	function (v) {
+		return null;
+	});

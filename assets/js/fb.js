@@ -2,6 +2,7 @@
 export function initializeFb (app) {
 
   // Initializes FB SDK
+  // TODO: rename to fbInit
   app.ports.initFb.subscribe(function ({appId, sdkVersion}) {
     FB.init({
       appId      : appId,
@@ -16,10 +17,12 @@ export function initializeFb (app) {
   // Checking is the guy logged in.
   app.ports.checkLoginStatus.subscribe(function () {
     FB.getLoginStatus(function(response) {
-      console.log('statusChangeCallback');
+      console.log('checkLoginStatus');
       console.log(response);
 
       app.ports.fbLoginStatus.send(response.status);
+
+      // TODO: send proper information about the login status.
 
       // if (response.status === 'connected') {
       //   // Logged into your app and Facebook.
@@ -31,5 +34,17 @@ export function initializeFb (app) {
       // }
     });
   });
+
+  // Log current guy out.
+  app.ports.fbLogout.subscribe(function () {
+    FB.logout(function(response) {
+      console.log('fbLogout');
+      console.log(response);
+
+      // TODO: send this.
+      // app.ports.fbLoginStatus.send(response.status);
+    });
+  });
+
 
 };
