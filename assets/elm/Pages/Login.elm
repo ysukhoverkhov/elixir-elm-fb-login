@@ -18,7 +18,7 @@ import Ports exposing
   , fbLoginStatus
   , initFb)
 
-import Msg as App exposing (Msg)
+import Msg as App exposing (Msg(..))
 import Pages.Login.Msg as Login exposing (..)
 
 -- MODEL
@@ -42,15 +42,8 @@ initialModel =
 
 -- UPDATE
 
-decodeFbLoginStatus : String -> LoginStatus
-decodeFbLoginStatus status =
-  case status of
-    "connected" -> Connected
-    _ -> NotConnected
-
-
-update : Login.Msg -> Model -> ( Model -> a, Login.Msg -> b ) -> ( a, Cmd b )
-update msg model ( modelProd, _ ) =
+update : Login.Msg -> Model -> ( Model -> a) -> ( a, Cmd msg )
+update msg model modelProd =
   let
     result =
       case msg of
@@ -76,19 +69,25 @@ onFacebookLoginStatus model status =
 
 -- SUBSCRIPTIONS
 
-subscriptions : Model -> (Login.Msg -> msg) -> Sub msg
-subscriptions model prod =
+subscriptions : Model -> Sub App.Msg
+subscriptions model =
   Sub.batch
-    [ appLoaded (\_ -> prod AppLoaded)
-    , fbInitialized (\_ -> prod FbInitialized)
-    , fbLoginStatus (\s -> prod (LoginStatusReceived(decodeFbLoginStatus s)))
+    [ appLoaded (\_ -> MsgLogin AppLoaded)
+    , fbInitialized (\_ -> MsgLogin FbInitialized)
+    , fbLoginStatus (\s -> MsgLogin (LoginStatusReceived(decodeFbLoginStatus s)))
     ]
+
+decodeFbLoginStatus : String -> LoginStatus
+decodeFbLoginStatus status =
+  case status of
+    "connected" -> Connected
+    _ -> NotConnected
 
 
 -- VIEW
 
-view : Model -> (Login.Msg -> msg) -> Html msg
-view model _ =
+view : Model -> Html msg
+view model =
   div [] [
     div [] [text "LOGIN APP"],
     div [] [text (toString model.appLoaded)]

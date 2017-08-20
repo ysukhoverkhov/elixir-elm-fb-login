@@ -52,7 +52,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   case ( msg, model ) of
     ( MsgLogin lmsg, ModelLogin lmodel ) ->
-      Login.update lmsg lmodel ( ModelLogin, MsgLogin )
+      Login.update lmsg lmodel ModelLogin
 
     _ ->
       -- TODO: Fatal error model here.
@@ -67,7 +67,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
   case model of
     ModelLogin m ->
-      Login.subscriptions m MsgLogin
+      Login.subscriptions m
 
     ModelApp _ ->
       Sub.none
@@ -81,7 +81,7 @@ view : Model -> Html Msg
 view model =
   case model of
     ModelLogin m ->
-      Login.view m MsgLogin
+      Login.view m
 
     ModelApp _ ->
       text "APP"
