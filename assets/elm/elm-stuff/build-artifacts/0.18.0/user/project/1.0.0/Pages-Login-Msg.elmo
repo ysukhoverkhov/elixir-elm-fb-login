@@ -1,5 +1,3 @@
-var _user$project$Pages_Login_Msg$NotConnected = {ctor: 'NotConnected'};
-var _user$project$Pages_Login_Msg$Connected = {ctor: 'Connected'};
 var _user$project$Pages_Login_Msg$Login = {ctor: 'Login'};
 var _user$project$Pages_Login_Msg$LoginStatusReceived = function (a) {
 	return {ctor: 'LoginStatusReceived', _0: a};

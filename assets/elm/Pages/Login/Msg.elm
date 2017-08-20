@@ -1,10 +1,8 @@
-module Pages.Login.Msg exposing (Msg(..), LoginStatus(..))
+module Pages.Login.Msg exposing (Msg(..))
 
 {-| All the messages used by Login page -}
 
-type LoginStatus
-  = Connected
-  | NotConnected
+import Util.Facebook exposing (LoginStatus(..))
 
 type Msg
   = AppLoaded

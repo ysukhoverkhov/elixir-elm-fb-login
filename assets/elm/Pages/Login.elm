@@ -16,6 +16,7 @@ import Ports exposing
   , fbLogin)
 
 import Transitions exposing (loginToOffice)
+import Util.Facebook as FB exposing (decodeLoginStatus)
 
 import Msg as App exposing (Msg(..))
 import Pages.Login.Msg as Login exposing (..)
@@ -40,10 +41,14 @@ initialModel =
 update : Login.Msg -> Login.Model -> ( App.Model, Cmd msg )
 update msg model =
   case msg of
-    AppLoaded -> onAppLoaded model
-    FbInitialized -> onFacebookInitialized model
-    LoginStatusReceived loginStatus -> onFacebookLoginStatus model loginStatus
-    Login -> onLogin model
+    AppLoaded ->
+      onAppLoaded model
+    FbInitialized ->
+      onFacebookInitialized model
+    LoginStatusReceived loginStatus ->
+      onFacebookLoginStatus model loginStatus
+    Login ->
+      onLogin model
 
 
 onAppLoaded : Login.Model -> ( App.Model, Cmd msg )
@@ -54,12 +59,12 @@ onFacebookInitialized : Login.Model -> ( App.Model, Cmd msg )
 onFacebookInitialized model =
   ( ModelLogin { model | state = CheckingLoginStatus }, fbCheckLoginStatus () )
 
-onFacebookLoginStatus : Login.Model -> LoginStatus -> ( App.Model, Cmd msg )
+onFacebookLoginStatus : Login.Model -> FB.LoginStatus -> ( App.Model, Cmd msg )
 onFacebookLoginStatus model status =
   case status of
-    Connected ->
+    FB.Connected ->
       ( loginToOffice model, Cmd.none )
-    NotConnected ->
+    FB.NotConnected ->
       ( ModelLogin { model | state = WaitingForLogin }, Cmd.none )
 
 onLogin : Login.Model -> ( App.Model, Cmd msg )
@@ -74,14 +79,8 @@ subscriptions model =
   Sub.batch
     [ appLoaded (MsgLogin AppLoaded |> always)
     , fbInitialized (MsgLogin FbInitialized |> always)
-    , fbLoginStatus (decodeFbLoginStatus >> LoginStatusReceived >> MsgLogin)
+    , fbLoginStatus (FB.decodeLoginStatus >> LoginStatusReceived >> MsgLogin)
     ]
-
-decodeFbLoginStatus : String -> LoginStatus
-decodeFbLoginStatus status =
-  case status of
-    "connected" -> Connected
-    _ -> NotConnected
 
 
 -- VIEW
@@ -91,11 +90,11 @@ view model =
   div [] [
     div [] [text "LOGIN PAGE"],
     div [] [text <| "App status " ++ (toString model.state)],
-    div [] (loginView model)
+    div [] (loginButtonView model)
   ]
 
-loginView : Login.Model -> List (Html App.Msg)
-loginView model =
+loginButtonView : Login.Model -> List (Html App.Msg)
+loginButtonView model =
   case model.state of
     WaitingForLogin ->
       [button [ onClick <| MsgLogin Login ] [ text "Login" ]]

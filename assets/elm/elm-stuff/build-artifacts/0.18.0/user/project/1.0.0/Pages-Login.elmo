@@ -1,4 +1,4 @@
-var _user$project$Pages_Login$loginView = function (model) {
+var _user$project$Pages_Login$loginButtonView = function (model) {
 	var _p0 = model.state;
 	if (_p0.ctor === 'WaitingForLogin') {
 		return {
@@ -55,19 +55,11 @@ var _user$project$Pages_Login$view = function (model) {
 					_0: A2(
 						_elm_lang$html$Html$div,
 						{ctor: '[]'},
-						_user$project$Pages_Login$loginView(model)),
+						_user$project$Pages_Login$loginButtonView(model)),
 					_1: {ctor: '[]'}
 				}
 			}
 		});
-};
-var _user$project$Pages_Login$decodeFbLoginStatus = function (status) {
-	var _p1 = status;
-	if (_p1 === 'connected') {
-		return _user$project$Pages_Login_Msg$Connected;
-	} else {
-		return _user$project$Pages_Login_Msg$NotConnected;
-	}
 };
 var _user$project$Pages_Login$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
@@ -84,10 +76,10 @@ var _user$project$Pages_Login$subscriptions = function (model) {
 				_1: {
 					ctor: '::',
 					_0: _user$project$Ports$fbLoginStatus(
-						function (_p2) {
+						function (_p1) {
 							return _user$project$Msg$MsgLogin(
 								_user$project$Pages_Login_Msg$LoginStatusReceived(
-									_user$project$Pages_Login$decodeFbLoginStatus(_p2)));
+									_user$project$Util_Facebook$decodeLoginStatus(_p1)));
 						}),
 					_1: {ctor: '[]'}
 				}
@@ -107,8 +99,8 @@ var _user$project$Pages_Login$onLogin = function (model) {
 };
 var _user$project$Pages_Login$onFacebookLoginStatus = F2(
 	function (model, status) {
-		var _p3 = status;
-		if (_p3.ctor === 'Connected') {
+		var _p2 = status;
+		if (_p2.ctor === 'Connected') {
 			return {
 				ctor: '_Tuple2',
 				_0: _user$project$Transitions$loginToOffice(model),
@@ -148,14 +140,14 @@ var _user$project$Pages_Login$onAppLoaded = function (model) {
 };
 var _user$project$Pages_Login$update = F2(
 	function (msg, model) {
-		var _p4 = msg;
-		switch (_p4.ctor) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
 			case 'AppLoaded':
 				return _user$project$Pages_Login$onAppLoaded(model);
 			case 'FbInitialized':
 				return _user$project$Pages_Login$onFacebookInitialized(model);
 			case 'LoginStatusReceived':
-				return A2(_user$project$Pages_Login$onFacebookLoginStatus, model, _p4._0);
+				return A2(_user$project$Pages_Login$onFacebookLoginStatus, model, _p3._0);
 			default:
 				return _user$project$Pages_Login$onLogin(model);
 		}
