@@ -7,8 +7,10 @@ type State
   | InitializingFb
   | CheckingLoginStatus
   | WaitingForLogin
+  | LoggingIn
 
 
 type alias Model =
-  { state : State
+  {
+    state : State
   }

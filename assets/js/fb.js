@@ -2,8 +2,7 @@
 export function initializeFb (app) {
 
   // Initializes FB SDK
-  // TODO: rename to fbInit
-  app.ports.initFb.subscribe(function ({appId, sdkVersion}) {
+  app.ports.fbInit.subscribe(function ({appId, sdkVersion}) {
     FB.init({
       appId      : appId,
       cookie     : true,
@@ -15,14 +14,13 @@ export function initializeFb (app) {
   });
 
   // Checking is the guy logged in.
-  app.ports.checkLoginStatus.subscribe(function () {
+  app.ports.fbCheckLoginStatus.subscribe(function () {
     FB.getLoginStatus(function(response) {
-      console.log('checkLoginStatus');
+      console.log('fbCheckLoginStatus');
       console.log(response);
 
-      app.ports.fbLoginStatus.send(response.status);
-
       // TODO: send proper information about the login status.
+      app.ports.fbLoginStatus.send(response.status);
 
       // if (response.status === 'connected') {
       //   // Logged into your app and Facebook.
@@ -35,14 +33,26 @@ export function initializeFb (app) {
     });
   });
 
+  // Log current guy in.
+  app.ports.fbLogin.subscribe(function () {
+    FB.login(function(response) {
+      console.log('fbLogin');
+      console.log(response);
+
+      // TODO: send proper information about the login status.
+      app.ports.fbLoginStatus.send(response.status);
+
+    }, {scope: 'email'});
+  });
+
   // Log current guy out.
   app.ports.fbLogout.subscribe(function () {
     FB.logout(function(response) {
       console.log('fbLogout');
       console.log(response);
 
-      // TODO: send this.
-      // app.ports.fbLoginStatus.send(response.status);
+      // TODO: send proper information about the login status.
+      app.ports.fbLoginStatus.send(response.status);
     });
   });
 

@@ -1,3 +1,27 @@
+var _user$project$Pages_Login$loginView = function (model) {
+	var _p0 = model.state;
+	if (_p0.ctor === 'WaitingForLogin') {
+		return {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_user$project$Msg$MsgLogin(_user$project$Pages_Login_Msg$Login)),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Login'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		};
+	} else {
+		return {ctor: '[]'};
+	}
+};
 var _user$project$Pages_Login$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -26,13 +50,20 @@ var _user$project$Pages_Login$view = function (model) {
 								_elm_lang$core$Basics$toString(model.state))),
 						_1: {ctor: '[]'}
 					}),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						_user$project$Pages_Login$loginView(model)),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
 var _user$project$Pages_Login$decodeFbLoginStatus = function (status) {
-	var _p0 = status;
-	if (_p0 === 'connected') {
+	var _p1 = status;
+	if (_p1 === 'connected') {
 		return _user$project$Pages_Login_Msg$Connected;
 	} else {
 		return _user$project$Pages_Login_Msg$NotConnected;
@@ -53,20 +84,31 @@ var _user$project$Pages_Login$subscriptions = function (model) {
 				_1: {
 					ctor: '::',
 					_0: _user$project$Ports$fbLoginStatus(
-						function (_p1) {
+						function (_p2) {
 							return _user$project$Msg$MsgLogin(
 								_user$project$Pages_Login_Msg$LoginStatusReceived(
-									_user$project$Pages_Login$decodeFbLoginStatus(_p1)));
+									_user$project$Pages_Login$decodeFbLoginStatus(_p2)));
 						}),
 					_1: {ctor: '[]'}
 				}
 			}
 		});
 };
+var _user$project$Pages_Login$onLogin = function (model) {
+	return {
+		ctor: '_Tuple2',
+		_0: _user$project$Model$ModelLogin(
+			_elm_lang$core$Native_Utils.update(
+				model,
+				{state: _user$project$Pages_Login_Model$LoggingIn})),
+		_1: _user$project$Ports$fbLogin(
+			{ctor: '_Tuple0'})
+	};
+};
 var _user$project$Pages_Login$onFacebookLoginStatus = F2(
 	function (model, status) {
-		var _p2 = status;
-		if (_p2.ctor === 'Connected') {
+		var _p3 = status;
+		if (_p3.ctor === 'Connected') {
 			return {
 				ctor: '_Tuple2',
 				_0: _user$project$Transitions$loginToOffice(model),
@@ -90,7 +132,7 @@ var _user$project$Pages_Login$onFacebookInitialized = function (model) {
 			_elm_lang$core$Native_Utils.update(
 				model,
 				{state: _user$project$Pages_Login_Model$CheckingLoginStatus})),
-		_1: _user$project$Ports$checkLoginStatus(
+		_1: _user$project$Ports$fbCheckLoginStatus(
 			{ctor: '_Tuple0'})
 	};
 };
@@ -101,19 +143,21 @@ var _user$project$Pages_Login$onAppLoaded = function (model) {
 			_elm_lang$core$Native_Utils.update(
 				model,
 				{state: _user$project$Pages_Login_Model$InitializingFb})),
-		_1: _user$project$Ports$initFb(_user$project$Config$fb)
+		_1: _user$project$Ports$fbInit(_user$project$Config$fb)
 	};
 };
 var _user$project$Pages_Login$update = F2(
 	function (msg, model) {
-		var _p3 = msg;
-		switch (_p3.ctor) {
+		var _p4 = msg;
+		switch (_p4.ctor) {
 			case 'AppLoaded':
 				return _user$project$Pages_Login$onAppLoaded(model);
 			case 'FbInitialized':
 				return _user$project$Pages_Login$onFacebookInitialized(model);
+			case 'LoginStatusReceived':
+				return A2(_user$project$Pages_Login$onFacebookLoginStatus, model, _p4._0);
 			default:
-				return A2(_user$project$Pages_Login$onFacebookLoginStatus, model, _p3._0);
+				return _user$project$Pages_Login$onLogin(model);
 		}
 	});
 var _user$project$Pages_Login$initialModel = _user$project$Model$ModelLogin(

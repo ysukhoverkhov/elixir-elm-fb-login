@@ -10,3 +10,4 @@ type Msg
   = AppLoaded
   | FbInitialized
   | LoginStatusReceived LoginStatus
+  | Login

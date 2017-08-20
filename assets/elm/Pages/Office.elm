@@ -8,6 +8,8 @@ import Html.Events exposing (onClick)
 
 import Ports exposing (fbLogout)
 
+import Transitions exposing (officeToLogin)
+
 import Msg as App exposing (Msg(..))
 import Pages.Office.Msg as Office exposing (..)
 
@@ -24,7 +26,7 @@ update msg model =
 
 onLogout : Office.Model -> ( App.Model, Cmd msg )
 onLogout model =
-  Debug.log "LOGOUT" ( ModelOffice model, fbLogout () ) -- TODO: transit model here to correct state.
+  ( officeToLogin model, fbLogout () )
 
 
 -- SUBSCRIPTIONS

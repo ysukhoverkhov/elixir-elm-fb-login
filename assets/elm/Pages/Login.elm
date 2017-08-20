@@ -5,12 +5,15 @@ module Pages.Login exposing (initialModel, subscriptions, update, view)
 
 import Config as Config exposing (fb)
 import Html exposing (Html, button, div, input, text)
+import Html.Events exposing (onClick)
+
 import Ports exposing
   ( appLoaded
-  , checkLoginStatus
+  , fbCheckLoginStatus
   , fbInitialized
   , fbLoginStatus
-  , initFb)
+  , fbInit
+  , fbLogin)
 
 import Transitions exposing (loginToOffice)
 
@@ -40,15 +43,16 @@ update msg model =
     AppLoaded -> onAppLoaded model
     FbInitialized -> onFacebookInitialized model
     LoginStatusReceived loginStatus -> onFacebookLoginStatus model loginStatus
+    Login -> onLogin model
 
 
 onAppLoaded : Login.Model -> ( App.Model, Cmd msg )
 onAppLoaded model =
-  ( ModelLogin { model | state = InitializingFb }, initFb Config.fb )
+  ( ModelLogin { model | state = InitializingFb }, fbInit Config.fb )
 
 onFacebookInitialized : Login.Model -> ( App.Model, Cmd msg )
 onFacebookInitialized model =
-  ( ModelLogin { model | state = CheckingLoginStatus }, checkLoginStatus () )
+  ( ModelLogin { model | state = CheckingLoginStatus }, fbCheckLoginStatus () )
 
 onFacebookLoginStatus : Login.Model -> LoginStatus -> ( App.Model, Cmd msg )
 onFacebookLoginStatus model status =
@@ -57,6 +61,10 @@ onFacebookLoginStatus model status =
       ( loginToOffice model, Cmd.none )
     NotConnected ->
       ( ModelLogin { model | state = WaitingForLogin }, Cmd.none )
+
+onLogin : Login.Model -> ( App.Model, Cmd msg )
+onLogin model =
+  ( ModelLogin { model | state = LoggingIn }, fbLogin ())
 
 
 -- SUBSCRIPTIONS
@@ -78,9 +86,18 @@ decodeFbLoginStatus status =
 
 -- VIEW
 
-view : Login.Model -> Html msg
+view : Login.Model -> Html App.Msg
 view model =
   div [] [
     div [] [text "LOGIN PAGE"],
-    div [] [text <| "App status " ++ (toString model.state)]
+    div [] [text <| "App status " ++ (toString model.state)],
+    div [] (loginView model)
   ]
+
+loginView : Login.Model -> List (Html App.Msg)
+loginView model =
+  case model.state of
+    WaitingForLogin ->
+      [button [ onClick <| MsgLogin Login ] [ text "Login" ]]
+    _ ->
+      []
